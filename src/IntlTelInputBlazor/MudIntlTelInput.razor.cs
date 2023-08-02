@@ -180,7 +180,7 @@ namespace IntlTelInputBlazor
                     UtilsScript
                 });
 
-                if (Value is not null)
+                if (Value?.ToString() is not null)
                 {
                     await _intlTelInputJsInterop.SetNumber(_inputIndex, Value.ToString());
                 }
