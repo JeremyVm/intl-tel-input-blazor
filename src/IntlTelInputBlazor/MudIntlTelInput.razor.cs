@@ -21,7 +21,6 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
        .Build();
 
     public MudInput<string> InputReference { get; private set; }
-    private MudMask _maskReference;
 
     public MudIntlTelInput() : base()
     {
@@ -39,9 +38,6 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
         return typeof(T) == typeof(IntlTel) && ((IntlTel)(object)value)?.IsValid != false;
     }
 
-    [CascadingParameter(Name = "SubscribeToParentForm")]
-    internal bool SubscribeToParentFormEx { get; set; } = true;
-
     /// <summary>
     /// Type of the input element. It should be a valid HTML5 input type.
     /// </summary>
@@ -49,7 +45,8 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
     [Category(CategoryTypes.FormComponent.Behavior)]
     public InputType InputType { get; set; } = InputType.Telephone;
 
-    //internal override InputType GetInputType() => InputType;
+    [CascadingParameter(Name = "SubscribeToParentForm")]
+    internal bool SubscribeToParentFormEx { get; set; } = true;
 
     private string GetCounterText() => Counter == null ? string.Empty : (Counter == 0 ? (string.IsNullOrEmpty(Text) ? "0" : $"{Text.Length}") : ((string.IsNullOrEmpty(Text) ? "0" : $"{Text.Length}") + $" / {Counter}"));
 
@@ -67,54 +64,29 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
 
     public override ValueTask FocusAsync()
     {
-        if (_mask == null)
-            return InputReference.FocusAsync();
-        else
-            return _maskReference.FocusAsync();
+        return InputReference.FocusAsync();
     }
 
     public override ValueTask BlurAsync()
     {
-        if (_mask == null)
-            return InputReference.BlurAsync();
-        else
-            return _maskReference.BlurAsync();
+        return InputReference.BlurAsync();
     }
 
     public override ValueTask SelectAsync()
     {
-        if (_mask == null)
-            return InputReference.SelectAsync();
-        else
-            return _maskReference.SelectAsync();
+        return InputReference.SelectAsync();
     }
 
     public override ValueTask SelectRangeAsync(int pos1, int pos2)
     {
-        if (_mask == null)
-            return InputReference.SelectRangeAsync(pos1, pos2);
-        else
-            return _maskReference.SelectRangeAsync(pos1, pos2);
+        return InputReference.SelectRangeAsync(pos1, pos2);
     }
 
-    [Obsolete($"Use {nameof(ResetValueAsync)} instead. This will be removed in v7")]
-    [ExcludeFromCodeCoverage]
     protected override void ResetValue()
     {
-        if (_mask == null)
-            InputReference.Reset();
-        else
-            _maskReference.Reset();
-        base.ResetValue();
-    }
+        InputReference.Reset();
 
-    protected override async Task ResetValueAsync()
-    {
-        if (_mask == null)
-            await InputReference.ResetAsync();
-        else
-            await _maskReference.ResetAsync();
-        await base.ResetValueAsync();
+        base.ResetValue();
     }
 
     /// <summary>
@@ -123,10 +95,7 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
     /// <returns></returns>
     public Task Clear()
     {
-        if (_mask == null)
-            return InputReference.SetText(null);
-        else
-            return _maskReference.Clear();
+        return InputReference.SetText(null);
     }
 
     /// <summary>
@@ -136,59 +105,13 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
     /// <returns></returns>
     public async Task SetText(string text)
     {
-        if (_mask == null)
-        {
-            if (InputReference != null)
-                await InputReference.SetText(text);
-            return;
-        }
-        await _maskReference.Clear();
-        //_maskReference.OnPaste(text);
+        if (InputReference != null)
+            await InputReference.SetText(text);
+        return;
     }
-
-    private IMask _mask = null;
-
-    /// <summary>
-    /// Provide a masking object. Built-in masks are PatternMask, MultiMask, RegexMask and BlockMask
-    /// Note: when Mask is set, TextField will ignore some properties such as Lines, Pattern or HideSpinButtons, OnKeyDown and OnKeyUp, etc.
-    /// </summary>
-    [Parameter]
-    [Category(CategoryTypes.General.Data)]
-    public IMask Mask
-    {
-        get => _maskReference?.Mask ?? _mask; // this might look strange, but it is absolutely necessary due to how MudMask works.
-        set
-        {
-            _mask = value;
-        }
-    }
-
-    protected override Task SetValueAsync(T value, bool updateText = true, bool force = false)
-    {
-        if (_mask != null)
-        {
-            var textValue = Converter.Set(value);
-            _mask.SetText(textValue);
-            textValue = Mask.GetCleanText();
-            value = Converter.Get(textValue);
-        }
-
-        return base.SetValueAsync(value, updateText);
-    }
-
     protected override Task SetTextAsync(string text, bool updateValue = true)
     {
-        if (_mask != null)
-        {
-            _mask.SetText(text);
-            text = _mask.Text;
-        }
-        return base.SetTextAsync(text, updateValue);
-    }
-
-    private async Task OnMaskedValueChanged(string s)
-    {
-        await SetTextAsync(s);
+        return Task.CompletedTask;
     }
 
     [Parameter]
@@ -205,7 +128,6 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
 
     [Parameter]
     public IEnumerable<string> ExcludeCountries { get; set; } = Enumerable.Empty<string>();
-
     [Parameter]
     public bool FormatOnDisplay { get; set; } = true;
 
@@ -236,7 +158,6 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
     private int _inputIndex;
 
     private DotNetObjectReference<MudIntlTelInput<IntlTel>> dotNetHelper;
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
