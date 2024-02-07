@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection RegisterIntlTelInput(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped <IntlTelInputJsInterop>();
+            serviceCollection.AddScoped<IntlTelInputJsInterop>();
             return serviceCollection;
         }
     }

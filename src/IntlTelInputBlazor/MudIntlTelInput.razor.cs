@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Utilities;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,11 +80,11 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
         return InputReference.SelectRangeAsync(pos1, pos2);
     }
 
-    protected override void ResetValue()
+    protected override async Task ResetValueAsync()
     {
-        InputReference.Reset();
+        await InputReference.ResetAsync();
 
-        base.ResetValue();
+        await base.ResetValueAsync();
     }
 
     /// <summary>
@@ -109,6 +107,7 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
             await InputReference.SetText(text);
         return;
     }
+
     protected override Task SetTextAsync(string text, bool updateValue = true)
     {
         return Task.CompletedTask;
@@ -128,6 +127,7 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
 
     [Parameter]
     public IEnumerable<string> ExcludeCountries { get; set; } = Enumerable.Empty<string>();
+
     [Parameter]
     public bool FormatOnDisplay { get; set; } = true;
 
@@ -157,14 +157,15 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
 
     private int _inputIndex;
 
-    private DotNetObjectReference<MudIntlTelInput<IntlTel>> dotNetHelper;
+    private DotNetObjectReference<MudIntlTelInput<IntlTel>> _dotNetHelper;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            dotNetHelper = DotNetObjectReference.Create(this) as DotNetObjectReference<MudIntlTelInput<IntlTel>>;
+            _dotNetHelper = DotNetObjectReference.Create(this) as DotNetObjectReference<MudIntlTelInput<IntlTel>>;
 
-            _inputIndex = await _intlTelInputJsInterop.Init2(InputReference.ElementReference, dotNetHelper, new
+            _inputIndex = await _intlTelInputJsInterop.Init2(InputReference.ElementReference, _dotNetHelper, new
             {
                 AllowDropDown,
                 AutoHideDialCode,
@@ -209,7 +210,7 @@ public partial class MudIntlTelInput<T> : MudDebouncedInput<T>
 
     protected override void Dispose(bool disposing)
     {
-        dotNetHelper?.Dispose();
+        _dotNetHelper?.Dispose();
 
         base.Dispose(disposing);
     }
