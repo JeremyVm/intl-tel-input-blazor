@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <AssemblyVersion>1.5.0</AssemblyVersion>
-        <FileVersion>1.5.0</FileVersion>
+        <AssemblyVersion>2.0.0</AssemblyVersion>
+        <FileVersion>2.0.0</FileVersion>
         <Authors>Rolandas, Giovanni Quarella, JeremyVm</Authors>
 		<PackageId>IntlTelInput.MudBlazor</PackageId>
         <PackageTags>Blazor;intl-tel-input;MudBlazor</PackageTags>
@@ -11,7 +11,7 @@
 
 Includes a MudBlazor component as well.
         </Description>
-        <Version>1.5.0</Version>
+        <Version>2.0.0</Version>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/JeremyVm/intl-tel-input-blazor</RepositoryUrl>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -22,7 +22,7 @@ Includes a MudBlazor component as well.
         <Title>International Telephone Input Blazor Component</Title>
         <PackageProjectUrl>https://github.com/JeremyVm/intl-tel-input-blazor</PackageProjectUrl>
         <PackageReadmeFile>readme.md</PackageReadmeFile>
-        <PackageReleaseNotes>Upgrade to .NET 8</PackageReleaseNotes>
+        <PackageReleaseNotes>Support latest version of MudBlazor</PackageReleaseNotes>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
@@ -31,8 +31,8 @@ Includes a MudBlazor component as well.
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.1" />
-		<PackageReference Include="MudBlazor" Version="6.15.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+		<PackageReference Include="MudBlazor" Version="7.8.0" />
     </ItemGroup>
 
     <ItemGroup>
